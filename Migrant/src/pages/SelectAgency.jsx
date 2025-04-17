@@ -9,10 +9,13 @@ import {
   FiChevronRight,
   FiUser,
   FiClock,
-  FiFileText
+  FiPhone,
+  FiMapPin,
+  FiBriefcase,
+  FiChevronDown,
+  FiChevronUp,
+  FiMail,
 } from "react-icons/fi";
-import { RiGovernmentLine } from "react-icons/ri";
-import { FaUserShield } from "react-icons/fa";
 import AuthHeader from "../components/AuthHeader";
 
 const SelectAgency = () => {
@@ -23,9 +26,11 @@ const SelectAgency = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [expandedAgency, setExpandedAgency] = useState(null);
 
-  const toggleModal = () => setIsModalOpen(!isModalOpen);
+  const toggleAgencyExpansion = (agencyId) => {
+    setExpandedAgency(expandedAgency === agencyId ? null : agencyId);
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -37,11 +42,6 @@ const SelectAgency = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(res.data);
-
-        // // If user is already agency verified, redirect to home
-        // if (res.data.agencyVerified) {
-        //   navigate("/home");
-        // }
       } catch (error) {
         console.error("Error fetching user:", error);
         navigate("/signin/migrant");
@@ -185,30 +185,117 @@ const SelectAgency = () => {
               <motion.div
                 key={agency._id}
                 whileHover={{ y: -5 }}
-                className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200"
+                className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 transition-all duration-200"
               >
                 <div className="p-6">
                   <div className="flex items-start">
                     <div className="flex-shrink-0 bg-blue-100 rounded-lg p-3">
                       <FiShield className="h-6 w-6 text-blue-600" />
                     </div>
-                    <div className="ml-4">
-                      <h3 className="text-lg font-bold text-gray-800">
-                        {agency.name}
-                      </h3>
+                    <div className="ml-4 flex-1">
+                      <div className="flex justify-between items-start">
+                        <h3 className="text-lg font-bold text-gray-800">
+                          {agency.name}
+                        </h3>
+                        <button
+                          onClick={() => toggleAgencyExpansion(agency._id)}
+                          className="text-gray-400 hover:text-gray-600 transition-colors"
+                        >
+                          {expandedAgency === agency._id ? (
+                            <FiChevronUp className="h-5 w-5" />
+                          ) : (
+                            <FiChevronDown className="h-5 w-5" />
+                          )}
+                        </button>
+                      </div>
                       <p className="text-sm text-gray-500 mt-1">
                         {agency.description || "Government verification agency"}
                       </p>
-
-                      <div className="mt-4 flex items-center text-sm text-gray-500">
-                        <FiClock className="mr-1.5 h-4 w-4 flex-shrink-0" />
-                        <span>
-                          Avg. verification time:{" "}
-                          {agency.avgVerificationTime || "3-5 days"}
-                        </span>
-                      </div>
                     </div>
                   </div>
+
+                  {/* Expanded Agency Details */}
+                  <AnimatePresence>
+                    {expandedAgency === agency._id && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="mt-4"
+                      >
+                        <div className="border-t border-gray-100 pt-4">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="flex items-start">
+                              <div className="bg-blue-50 p-2 rounded-lg">
+                                <FiPhone className="h-4 w-4 text-blue-600" />
+                              </div>
+                              <div className="ml-3">
+                                <p className="text-xs font-medium text-gray-500">
+                                  Phone
+                                </p>
+                                <p className="text-sm text-gray-800 mt-1">
+                                  {agency.phoneNumber || "Not provided"}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-start">
+                              <div className="bg-blue-50 p-2 rounded-lg">
+                                <FiMapPin className="h-4 w-4 text-blue-600" />
+                              </div>
+                              <div className="ml-3">
+                                <p className="text-xs font-medium text-gray-500">
+                                  Address
+                                </p>
+                                <p className="text-sm text-gray-800 mt-1">
+                                  {agency.location || "Not specified"}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-start">
+                              <div className="bg-blue-50 p-2 rounded-lg">
+                                <FiBriefcase className="h-4 w-4 text-blue-600" />
+                              </div>
+                              <div className="ml-3">
+                                <p className="text-xs font-medium text-gray-500">
+                                  Department
+                                </p>
+                                <p className="text-sm text-gray-800 mt-1">
+                                  {agency.department || "Not specified"}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex items-start">
+                              <div className="bg-blue-50 p-2 rounded-lg">
+                                {agency.isVerified ? (
+                                  <FiCheckCircle className="h-4 w-4 text-green-500" />
+                                ) : (
+                                  <FiClock className="h-4 w-4 text-yellow-500" />
+                                )}
+                              </div>
+                              <div className="ml-3">
+                                <p className="text-xs font-medium text-gray-500">
+                                  Status
+                                </p>
+                                <p
+                                  className={`text-sm mt-1 ${
+                                    agency.isVerified
+                                      ? "text-green-600"
+                                      : "text-yellow-600"
+                                  }`}
+                                >
+                                  {agency.isVerified ? "Verified" : "Pending"}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
                   <div className="mt-6">
                     <motion.button
