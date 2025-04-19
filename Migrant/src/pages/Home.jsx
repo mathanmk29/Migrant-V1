@@ -32,17 +32,21 @@ const Home = () => {
           headers: { Authorization: `Bearer ${token}` },
         });
 
+        // Update localStorage with fresh user data
+        localStorage.setItem("user", JSON.stringify(res.data));
         setUser(res.data);
       } catch (error) {
         console.error("Error fetching user:", error);
+        // Clear user data if there's an error
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("userId");
         navigate("/signin/migrant");
       }
     };
 
     fetchUser();
   }, []);
-
-  
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 

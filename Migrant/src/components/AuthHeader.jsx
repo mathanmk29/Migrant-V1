@@ -20,6 +20,8 @@ const AuthHeader = ({ user }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("userId");
     navigate("/signin/migrant");
   };
 
@@ -55,17 +57,21 @@ const AuthHeader = ({ user }) => {
               <FiHome />
               <span>Home</span>
             </button>
-            <button
-              onClick={() => navigate("/select-agency")}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300 ${
-                isActive("/select-agency")
-                  ? "bg-indigo-100 text-indigo-600 font-medium"
-                  : "hover:bg-gray-100 text-gray-700 hover:text-indigo-600"
-              }`}
-            >
-              <FaUserShield />
-              <span>Agencies</span>
-            </button>
+            
+            {/* Only show Agencies button if user is a migrant */}
+            {user?.isMigrant && (
+              <button
+                onClick={() => navigate("/select-agency")}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-300 ${
+                  isActive("/select-agency")
+                    ? "bg-indigo-100 text-indigo-600 font-medium"
+                    : "hover:bg-gray-100 text-gray-700 hover:text-indigo-600"
+                }`}
+              >
+                <FaUserShield />
+                <span>Agencies</span>
+              </button>
+            )}
 
             {user?.agencyVerified && user?.isMigrant && (
               <>
@@ -156,7 +162,8 @@ const AuthHeader = ({ user }) => {
                   <span>Home</span>
                 </button>
 
-                {user?.agencyVerified && user?.isMigrant && (
+                {/* Only show Agencies button in mobile menu if user is a migrant */}
+                {user?.isMigrant && (
                   <>
                     <button
                       onClick={() => {
@@ -172,34 +179,39 @@ const AuthHeader = ({ user }) => {
                       <FaUserShield />
                       <span>Agencies</span>
                     </button>
-                    <button
-                      onClick={() => {
-                        navigate("/submit-complaint");
-                        setIsMenuOpen(false);
-                      }}
-                      className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
-                        isActive("/submit-complaint")
-                          ? "bg-indigo-100 text-indigo-600 font-medium"
-                          : "hover:bg-gray-100"
-                      }`}
-                    >
-                      <FiAlertCircle />
-                      <span>Submit Complaint</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        navigate("/user-complaints");
-                        setIsMenuOpen(false);
-                      }}
-                      className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
-                        isActive("/user-complaints")
-                          ? "bg-indigo-100 text-indigo-600 font-medium"
-                          : "hover:bg-gray-100"
-                      }`}
-                    >
-                      <FiFileText />
-                      <span>Your Complaints</span>
-                    </button>
+
+                    {user?.agencyVerified && (
+                      <>
+                        <button
+                          onClick={() => {
+                            navigate("/submit-complaint");
+                            setIsMenuOpen(false);
+                          }}
+                          className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
+                            isActive("/submit-complaint")
+                              ? "bg-indigo-100 text-indigo-600 font-medium"
+                              : "hover:bg-gray-100"
+                          }`}
+                        >
+                          <FiAlertCircle />
+                          <span>Submit Complaint</span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            navigate("/user-complaints");
+                            setIsMenuOpen(false);
+                          }}
+                          className={`flex items-center space-x-2 px-4 py-2 rounded-lg ${
+                            isActive("/user-complaints")
+                              ? "bg-indigo-100 text-indigo-600 font-medium"
+                              : "hover:bg-gray-100"
+                          }`}
+                        >
+                          <FiFileText />
+                          <span>Your Complaints</span>
+                        </button>
+                      </>
+                    )}
                   </>
                 )}
 

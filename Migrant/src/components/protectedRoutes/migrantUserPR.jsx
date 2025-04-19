@@ -1,16 +1,18 @@
 import React from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const MigrantProtectedRoute = ({ children }) => {
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem("user"));
-  
+
   // List of routes that require full verification
-  const protectedRoutes = ['/submit-complaint', '/user-complaints'];
-  
-  // List of routes that only require migrant verification
-  const migrantOnlyRoutes = ['/select-agency', '/verify'];
-  
+  const protectedRoutes = ["/submit-complaint", "/user-complaints"];
+
+  // List of routes that only require migrant verification (removed '/verify')
+  const migrantOnlyRoutes = ["/select-agency"];
+
   // If no user is logged in, redirect to login
   if (!user) {
     return <Navigate to="/signin/migrant" state={{ from: location }} replace />;
@@ -22,9 +24,15 @@ const MigrantProtectedRoute = ({ children }) => {
 
   // If user is not a migrant, they can only access home and verification page
   if (!user.isMigrant) {
-    if (location.pathname === '/verify') {
+    if (location.pathname === "/verify") {
       return children; // Allow access to verification page
     }
+    return <Navigate to="/home" state={{ from: location }} replace />;
+  }
+
+  // If user is a migrant trying to access verify page
+  if (user.isMigrant && location.pathname === "/verify") {
+    alert("You are already verified as a migrant"); // Simple alternative
     return <Navigate to="/home" state={{ from: location }} replace />;
   }
 
@@ -32,7 +40,9 @@ const MigrantProtectedRoute = ({ children }) => {
   if (!user.agencyVerified) {
     if (isProtectedRoute) {
       // Redirect to select-agency if trying to access protected routes
-      return <Navigate to="/select-agency" state={{ from: location }} replace />;
+      return (
+        <Navigate to="/select-agency" state={{ from: location }} replace />
+      );
     }
     if (isMigrantOnlyRoute) {
       // Allow access to migrant-only routes
