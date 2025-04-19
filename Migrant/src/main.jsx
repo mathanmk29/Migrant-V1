@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import "./index.css";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
@@ -18,37 +19,47 @@ import LandingPage from "./pages/LandingPage";
 import GovLogin from "./pages/GovLogin";
 import GovDashboard from "./pages/GovDashboard";
 import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./components/ProtectedRoute";
-
-import "./index.css";
+import MigrantProtectedRoute from "./components/protectedRoutes/migrantUserPR";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Router>
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/home" element={<Home />} />
 
       {/* Migrant Routes */}
-      <Route path="/home" element={<Home />} />
+      <Route
+        path="/select-agency"
+        element={
+          <MigrantProtectedRoute>
+            <SelectAgency />
+          </MigrantProtectedRoute>
+        }
+      />
+      <Route
+        path="/verify"
+        element={
+          <MigrantProtectedRoute>
+            <Verification />
+          </MigrantProtectedRoute>
+        }
+      />
       <Route
         path="/submit-complaint"
         element={
-          <ProtectedRoute>
-            {" "}
-            <SubmitComplaint />{" "}
-          </ProtectedRoute>
+          <MigrantProtectedRoute>
+            <SubmitComplaint />
+          </MigrantProtectedRoute>
         }
       />
       <Route
         path="/user-complaints"
         element={
-          <ProtectedRoute>
-            {" "}
-            <UserComplaints />{" "}
-          </ProtectedRoute>
+          <MigrantProtectedRoute>
+            <UserComplaints />
+          </MigrantProtectedRoute>
         }
       />
-      <Route path="/verify" element={<Verification />} />
-      <Route path="/select-agency" element={<SelectAgency />} />
 
       {/* Sign In Routes */}
       <Route path="/signin/migrant" element={<Login />} />
