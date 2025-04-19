@@ -64,6 +64,7 @@ const AgencyDashboard = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("agencyToken");
+    localStorage.removeItem("agencyData");
     navigate("/");
   };
 
@@ -72,7 +73,7 @@ const AgencyDashboard = () => {
     try {
       const token = localStorage.getItem("agencyToken");
       if (!token) {
-        navigate("/");
+        navigate("/signup/agency");
         return;
       }
       
@@ -97,7 +98,7 @@ const AgencyDashboard = () => {
           // Fallback if no data in localStorage - in a real app, you'd make an API call here
           setAgencyData({
             _id: tokenData.agencyId,
-            name: "Your Agency",
+            name: "No User Data",
             email: "agency@example.com",
             department: "Verification Department",
             location: "Your Location",

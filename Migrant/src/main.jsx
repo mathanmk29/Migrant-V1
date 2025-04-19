@@ -19,7 +19,8 @@ import LandingPage from "./pages/LandingPage";
 import GovLogin from "./pages/GovLogin";
 import GovDashboard from "./pages/GovDashboard";
 import NotFound from "./pages/NotFound";
-import MigrantProtectedRoute from "./components/protectedRoutes/migrantUserPR";
+import MigrantProtectedRoute from "./components/protectedroutes/MigrantUserPR";
+import DepartmentProtectedRoute from "./components/protectedroutes/DepartmentPR";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Router>
@@ -74,7 +75,14 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 
       {/* Dashboard Routes */}
       <Route path="/agency-dashboard" element={<AgencyDashboard />} />
-      <Route path="/department-dashboard" element={<DepartmentDashboard />} />
+      <Route
+        path="/department-dashboard"
+        element={
+          <DepartmentProtectedRoute>
+            <DepartmentDashboard />
+          </DepartmentProtectedRoute>
+        }
+      />
       <Route path="/government-dashboard" element={<GovDashboard />} />
 
       {/* Catch-all route for undefined URLs */}
