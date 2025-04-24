@@ -19,7 +19,7 @@ const DepartmentSignup = () => {
   const navigate = useNavigate();
 
   // Validation regex
-  const nameRegex = /^[A-Za-z\s\-]+$/;
+  // const nameRegex = /^[A-Za-z\s\-]+$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const passwordRegex =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -27,9 +27,9 @@ const DepartmentSignup = () => {
   const validateField = (name, value) => {
     switch (name) {
       case "name":
-        if (!nameRegex.test(value)) {
-          return "Department name must contain only letters and spaces.";
-        }
+        // if (!nameRegex.test(value)) {
+        //   return "Department name must contain only letters and spaces.";
+        // }
         break;
       case "email":
         if (!emailRegex.test(value)) {
