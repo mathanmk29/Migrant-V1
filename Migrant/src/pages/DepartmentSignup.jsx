@@ -4,7 +4,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { FiUser, FiMail, FiLock, FiMapPin, FiShield } from "react-icons/fi";
 import { toast } from "react-toastify";
-import Header from "../components/Header";
+import Header from "../components/landingpage/Header";
 
 const DepartmentSignup = () => {
   const [department, setDepartment] = useState({
@@ -73,17 +73,20 @@ const DepartmentSignup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-  
+
     if (!validateAll()) return;
-  
+
     setIsLoading(true);
     try {
-      await axios.post("http://localhost:5000/api/department/signup", department);
+      await axios.post(
+        "http://localhost:5000/api/department/signup",
+        department
+      );
       toast.success("Department registered successfully!");
       navigate("/signin/department");
     } catch (error) {
       console.error("Signup Error:", error.response?.data);
-  
+
       const errMsg = error.response?.data?.error?.toLowerCase();
       if (errMsg && errMsg.includes("email") && errMsg.includes("exist")) {
         setErrors((prev) => ({ ...prev, email: "Email already exists." }));
@@ -94,7 +97,6 @@ const DepartmentSignup = () => {
       setIsLoading(false);
     }
   };
-  
 
   return (
     <div className="min-h-screen flex items-start pt-8 pb-8 justify-center bg-blue-100 p-4">
@@ -108,7 +110,9 @@ const DepartmentSignup = () => {
             <FiShield className="text-white text-2xl" />
           </div>
           <h2 className="text-3xl font-bold">Register Department</h2>
-          <p className="mt-2 opacity-90">Create an account for your government department</p>
+          <p className="mt-2 opacity-90">
+            Create an account for your government department
+          </p>
         </div>
 
         <form onSubmit={handleSignup} className="p-8 space-y-6">
@@ -131,7 +135,9 @@ const DepartmentSignup = () => {
                 required
               />
             </div>
-            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+            {errors.name && (
+              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+            )}
           </div>
 
           {/* Email */}
@@ -153,7 +159,9 @@ const DepartmentSignup = () => {
                 required
               />
             </div>
-            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+            )}
           </div>
 
           {/* Jurisdiction */}

@@ -4,7 +4,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { FiUser, FiMail, FiLock, FiMapPin, FiFileText } from "react-icons/fi";
 import { toast } from "react-toastify";
-import Header from "../components/Header";
+import Header from "../components/landingpage/Header";
 
 const AgencySignup = () => {
   const [agency, setAgency] = useState({
@@ -14,7 +14,7 @@ const AgencySignup = () => {
     department: "",
     phoneNumber: "",
     location: "",
-    licenseNumber: ""
+    licenseNumber: "",
   });
   const [errors, setErrors] = useState({
     name: "",
@@ -22,7 +22,7 @@ const AgencySignup = () => {
     password: "",
     phoneNumber: "",
     location: "",
-    licenseNumber: ""
+    licenseNumber: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const AgencySignup = () => {
     "Healthcare",
     "Education",
     "Legal",
-    "Other"
+    "Other",
   ];
 
   const validateName = (name) => {
@@ -63,18 +63,18 @@ const AgencySignup = () => {
 
   const validatePhone = (phone) => {
     // Remove all non-digit characters for validation
-    const digitsOnly = phone.replace(/\D/g, '');
-    
+    const digitsOnly = phone.replace(/\D/g, "");
+
     // Strict 10-digit validation
     if (digitsOnly.length !== 10) {
       return "Phone number must be exactly 10 digits";
     }
-    
+
     // Check if the input contains any invalid characters
     if (!/^\d+$/.test(digitsOnly)) {
       return "Phone number must contain only digits";
     }
-    
+
     return "";
   };
 
@@ -84,7 +84,8 @@ const AgencySignup = () => {
   };
 
   const validatePassword = (password) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!regex.test(password)) {
       return "Password must contain at least 8 characters, one uppercase, one lowercase, one number and one special character";
     }
@@ -93,7 +94,7 @@ const AgencySignup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    
+
     // Validate all fields
     const nameError = validateName(agency.name);
     const emailError = validateEmail(agency.email);
@@ -101,15 +102,22 @@ const AgencySignup = () => {
     const locationError = validateLocation(agency.location);
     const licenseError = validateLicense(agency.licenseNumber);
     const passwordError = validatePassword(agency.password);
-    
-    if (nameError || emailError || phoneError || locationError || licenseError || passwordError) {
+
+    if (
+      nameError ||
+      emailError ||
+      phoneError ||
+      locationError ||
+      licenseError ||
+      passwordError
+    ) {
       setErrors({
         name: nameError,
         email: emailError,
         phoneNumber: phoneError,
         location: locationError,
         licenseNumber: licenseError,
-        password: passwordError
+        password: passwordError,
       });
       return;
     }
@@ -117,13 +125,18 @@ const AgencySignup = () => {
     setIsLoading(true);
     try {
       await axios.post("http://localhost:5000/api/agency/signup", agency);
-      toast.success("Agency registered successfully! Awaiting admin verification.");
+      toast.success(
+        "Agency registered successfully! Awaiting admin verification."
+      );
       navigate("/signin/agency");
     } catch (error) {
       if (error.response?.data?.error?.includes("email")) {
-        setErrors(prev => ({ ...prev, email: "Email already exists" }));
+        setErrors((prev) => ({ ...prev, email: "Email already exists" }));
       } else if (error.response?.data?.error?.includes("License number")) {
-        setErrors(prev => ({ ...prev, licenseNumber: "License number already in use" }));
+        setErrors((prev) => ({
+          ...prev,
+          licenseNumber: "License number already in use",
+        }));
       } else {
         toast.error(error.response?.data?.error || "Registration failed");
       }
@@ -134,48 +147,51 @@ const AgencySignup = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: "" }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
-    
+
     // For phone numbers, only allow digits and limit to 10 digits
     if (name === "phoneNumber") {
-      const digitsOnly = value.replace(/\D/g, '').slice(0, 10);
-      setAgency(prev => ({
+      const digitsOnly = value.replace(/\D/g, "").slice(0, 10);
+      setAgency((prev) => ({
         ...prev,
-        [name]: digitsOnly
+        [name]: digitsOnly,
       }));
     } else {
-      setAgency(prev => ({
+      setAgency((prev) => ({
         ...prev,
-        [name]: value
+        [name]: value,
       }));
     }
   };
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
-    
+
     switch (name) {
       case "name":
-        setErrors(prev => ({ ...prev, name: validateName(value) }));
+        setErrors((prev) => ({ ...prev, name: validateName(value) }));
         break;
       case "email":
-        setErrors(prev => ({ ...prev, email: validateEmail(value) }));
+        setErrors((prev) => ({ ...prev, email: validateEmail(value) }));
         break;
       case "phoneNumber":
-        setErrors(prev => ({ ...prev, phoneNumber: validatePhone(value) }));
+        setErrors((prev) => ({ ...prev, phoneNumber: validatePhone(value) }));
         break;
       case "location":
-        setErrors(prev => ({ ...prev, location: validateLocation(value) }));
+        setErrors((prev) => ({ ...prev, location: validateLocation(value) }));
         break;
       case "licenseNumber":
-        setErrors(prev => ({ ...prev, licenseNumber: validateLicense(value) }));
+        setErrors((prev) => ({
+          ...prev,
+          licenseNumber: validateLicense(value),
+        }));
         break;
       case "password":
-        setErrors(prev => ({ ...prev, password: validatePassword(value) }));
+        setErrors((prev) => ({ ...prev, password: validatePassword(value) }));
         break;
       default:
         break;
@@ -215,12 +231,16 @@ const AgencySignup = () => {
                     value={agency.name}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`block w-full pl-12 pr-4 py-3 text-lg border ${errors.name ? "border-red-300" : "border-gray-300"} rounded-md leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+                    className={`block w-full pl-12 pr-4 py-3 text-lg border ${
+                      errors.name ? "border-red-300" : "border-gray-300"
+                    } rounded-md leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
                     placeholder="e.g. Department of Immigration"
                     required
                   />
                 </div>
-                {errors.name && <p className="mt-2 text-base text-red-600">{errors.name}</p>}
+                {errors.name && (
+                  <p className="mt-2 text-base text-red-600">{errors.name}</p>
+                )}
               </div>
 
               {/* Email */}
@@ -238,12 +258,16 @@ const AgencySignup = () => {
                     value={agency.email}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`block w-full pl-12 pr-4 py-3 text-lg border ${errors.email ? "border-red-300" : "border-gray-300"} rounded-md leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+                    className={`block w-full pl-12 pr-4 py-3 text-lg border ${
+                      errors.email ? "border-red-300" : "border-gray-300"
+                    } rounded-md leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
                     placeholder="agency@government.org"
                     required
                   />
                 </div>
-                {errors.email && <p className="mt-2 text-base text-red-600">{errors.email}</p>}
+                {errors.email && (
+                  <p className="mt-2 text-base text-red-600">{errors.email}</p>
+                )}
               </div>
 
               {/* Department */}
@@ -282,14 +306,20 @@ const AgencySignup = () => {
                     value={agency.phoneNumber}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`block w-full pl-12 pr-4 py-3 text-lg border ${errors.phoneNumber ? "border-red-300" : "border-gray-300"} rounded-md leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+                    className={`block w-full pl-12 pr-4 py-3 text-lg border ${
+                      errors.phoneNumber ? "border-red-300" : "border-gray-300"
+                    } rounded-md leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
                     placeholder="10 digit phone number"
                     maxLength="10"
                     pattern="[0-9]{10}"
                     required
                   />
                 </div>
-                {errors.phoneNumber && <p className="mt-2 text-base text-red-600">{errors.phoneNumber}</p>}
+                {errors.phoneNumber && (
+                  <p className="mt-2 text-base text-red-600">
+                    {errors.phoneNumber}
+                  </p>
+                )}
               </div>
 
               {/* Location */}
@@ -307,12 +337,18 @@ const AgencySignup = () => {
                     value={agency.location}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`block w-full pl-12 pr-4 py-3 text-lg border ${errors.location ? "border-red-300" : "border-gray-300"} rounded-md leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+                    className={`block w-full pl-12 pr-4 py-3 text-lg border ${
+                      errors.location ? "border-red-300" : "border-gray-300"
+                    } rounded-md leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
                     placeholder="City, State"
                     required
                   />
                 </div>
-                {errors.location && <p className="mt-2 text-base text-red-600">{errors.location}</p>}
+                {errors.location && (
+                  <p className="mt-2 text-base text-red-600">
+                    {errors.location}
+                  </p>
+                )}
               </div>
 
               {/* License Number */}
@@ -330,14 +366,19 @@ const AgencySignup = () => {
                     value={agency.licenseNumber}
                     onChange={handleChange}
                     onBlur={handleBlur}
-
-                    className={`block w-full pl-12 pr-4 py-3 text-lg border ${errors.licenseNumber ? "border-red-300" : "border-gray-300"} rounded-md leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+                    className={`block w-full pl-12 pr-4 py-3 text-lg border ${
+                      errors.licenseNumber
+                        ? "border-red-300"
+                        : "border-gray-300"
+                    } rounded-md leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
                     placeholder="License Number"
                     required
                   />
                 </div>
                 {errors.licenseNumber ? (
-                  <p className="mt-2 text-base text-red-600">{errors.licenseNumber}</p>
+                  <p className="mt-2 text-base text-red-600">
+                    {errors.licenseNumber}
+                  </p>
                 ) : (
                   <p className="mt-2 text-sm text-gray-500">
                     Enter your government-issued license number
@@ -360,13 +401,19 @@ const AgencySignup = () => {
                     value={agency.password}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className={`block w-full pl-12 pr-4 py-3 text-lg border ${errors.password ? "border-red-300" : "border-gray-300"} rounded-md leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+                    className={`block w-full pl-12 pr-4 py-3 text-lg border ${
+                      errors.password ? "border-red-300" : "border-gray-300"
+                    } rounded-md leading-5 bg-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
                     placeholder="Minimum 8 characters"
                     minLength="8"
                     required
                   />
                 </div>
-                {errors.password && <p className="mt-2 text-base text-red-600">{errors.password}</p>}
+                {errors.password && (
+                  <p className="mt-2 text-base text-red-600">
+                    {errors.password}
+                  </p>
+                )}
               </div>
 
               {/* Submit Button */}

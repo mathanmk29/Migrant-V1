@@ -13,7 +13,7 @@ import {
 } from "react-icons/fi";
 import { RiGovernmentLine } from "react-icons/ri";
 import { FaUserShield } from "react-icons/fa";
-import AuthHeader from "../components/AuthHeader";
+import AuthHeader from "../components/user/AuthHeader";
 
 const Home = () => {
   const [user, setUser] = useState(null);

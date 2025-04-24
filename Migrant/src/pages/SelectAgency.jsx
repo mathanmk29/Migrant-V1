@@ -16,7 +16,7 @@ import {
   FiChevronUp,
   FiMail,
 } from "react-icons/fi";
-import AuthHeader from "../components/AuthHeader";
+import AuthHeader from "../components/user/AuthHeader";
 
 const SelectAgency = () => {
   const [agencies, setAgencies] = useState([]);

@@ -7,9 +7,9 @@ import {
   FiClock,
   FiCheckCircle,
   FiXCircle,
-  FiAlertCircle
+  FiAlertCircle,
 } from "react-icons/fi";
-import AuthHeader from "../components/AuthHeader";
+import AuthHeader from "../components/user/AuthHeader";
 
 const UserComplaints = () => {
   const [complaints, setComplaints] = useState([]);
@@ -58,8 +58,6 @@ const UserComplaints = () => {
 
     fetchComplaints();
   }, []);
-
-
 
   const getStatusIcon = (status) => {
     switch (status) {

@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { FiLock, FiMail, FiLogIn, FiShield } from "react-icons/fi";
-import { toast } from 'react-toastify';
-import Header from "../components/Header";
+import { toast } from "react-toastify";
+import Header from "../components/landingpage/Header";
 
 const GovLogin = () => {
   const [department, setDepartment] = useState({ email: "", password: "" });
@@ -17,7 +17,10 @@ const GovLogin = () => {
     setErrorMessage("");
     setIsLoading(true);
     try {
-      const res = await axios.post("http://localhost:5000/api/government/login", department);
+      const res = await axios.post(
+        "http://localhost:5000/api/government/login",
+        department
+      );
       localStorage.setItem("govToken", res.data.token);
       localStorage.setItem("govName", res.data.departmentName);
       toast.success("Login successful!");
@@ -31,9 +34,8 @@ const GovLogin = () => {
   };
 
   return (
-
     <div className="min-h-screen flex items-center justify-center bg-blue-100 p-4">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
         className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden"
@@ -45,7 +47,7 @@ const GovLogin = () => {
           <h2 className="text-3xl font-bold">Government Portal</h2>
           <p className="mt-2 opacity-90">Access your Government dashboard</p>
         </div>
-        
+
         <form onSubmit={handleLogin} className="p-8 space-y-6">
           {errorMessage && (
             <div className="mb-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded-lg">
@@ -71,7 +73,7 @@ const GovLogin = () => {
               />
             </div>
           </div>
-          
+
           <div>
             <label className="block text-gray-700 mb-2">Password</label>
             <div className="relative">
@@ -91,7 +93,7 @@ const GovLogin = () => {
               />
             </div>
           </div>
-          
+
           <button
             type="submit"
             disabled={isLoading}
@@ -99,9 +101,25 @@ const GovLogin = () => {
           >
             {isLoading ? (
               <>
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 Signing In...
               </>
@@ -113,8 +131,6 @@ const GovLogin = () => {
             )}
           </button>
         </form>
-        
-       
       </motion.div>
     </div>
   );

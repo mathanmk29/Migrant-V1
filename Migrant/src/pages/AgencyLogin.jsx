@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { FiLock, FiMail, FiLogIn } from "react-icons/fi";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Header from "../components/Header";
+import Header from "../components/landingpage/Header";
 
 const AgencyLogin = () => {
   const [agency, setAgency] = useState({ email: "", password: "" });
@@ -19,9 +19,12 @@ const AgencyLogin = () => {
     setIsLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/agency/login", agency);
+      const res = await axios.post(
+        "http://localhost:5000/api/agency/login",
+        agency
+      );
       localStorage.setItem("agencyToken", res.data.token);
-      
+
       // Store agency data in localStorage for profile display
       localStorage.setItem("agencyData", JSON.stringify(res.data.agency));
 
@@ -50,7 +53,9 @@ const AgencyLogin = () => {
         >
           <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white text-center">
             <h2 className="text-3xl font-bold">Agency Portal</h2>
-            <p className="mt-2 text-base opacity-90">Access your government agency dashboard</p>
+            <p className="mt-2 text-base opacity-90">
+              Access your government agency dashboard
+            </p>
           </div>
 
           <form onSubmit={handleLogin} className="p-8 space-y-6">
@@ -80,7 +85,9 @@ const AgencyLogin = () => {
             </div>
 
             <div>
-              <label className="block text-gray-700 mb-2 text-md">Password</label>
+              <label className="block text-gray-700 mb-2 text-md">
+                Password
+              </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <FiLock className="text-gray-400 h-5 w-5" />
